@@ -12,6 +12,7 @@ group = "com.braz.rui"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 micronaut {
@@ -29,9 +30,30 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     implementation("io.micronaut:micronaut-validation")
+    implementation("javax.annotation:javax.annotation-api")
+
+    // Database configuration
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+
+    // Security
+
+    implementation ("io.micronaut:micronaut-security:1.0.0")
+
+
+    // Kotlin essential
+    implementation("io.grpc:grpc-kotlin-stub:${grpctVersionKotlin}")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Tests
     testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.testcontainers:postgresql")
 }
 
 
@@ -53,14 +75,23 @@ tasks {
             jvmTarget = "1.8"
         }
     }
-
-
 }
+
 sourceSets {
     main {
         java {
             srcDirs("build/generated/source/proto/main/grpc")
+            // Kotlin essential
+            srcDirs("build/generated/source/proto/main/grpckt")
             srcDirs("build/generated/source/proto/main/java")
+        }
+        proto{
+            srcDirs("build/generated/source/proto/main/grpc")
+            // Kotlin essential
+            srcDirs("build/generated/source/proto/main/grpckt")
+            srcDirs("build/generated/source/proto/main/java")
+            exclude("src/main/java")
+            exclude("src/main/proto")
         }
     }
 }
@@ -69,8 +100,12 @@ protobuf {
     protoc { artifact = "com.google.protobuf:protoc:3.14.0" }
     plugins {
         grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.33.1" }
+        grpckt { artifact = "io.grpc:protoc-gen-grpc-kotlin:${grpctVersionKotlin}:jdk7@jar" }
     }
     generateProtoTasks {
-        all()*.plugins { grpc {} }
+        all()*.plugins {
+            grpc {}
+            grpckt {}
+        }
     }
 }
