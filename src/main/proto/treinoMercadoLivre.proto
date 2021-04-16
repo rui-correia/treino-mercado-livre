@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.braz.rui";
+option java_outer_classname = "TreinoMercadoLivre";
+option objc_class_prefix = "HLW";
+
+package com.braz.rui;
+
+service TreinoMercadoLivreService {
+  rpc send (TreinoMercadoLivreRequest) returns (TreinoMercadoLivreReply) {}
+}
+
+message TreinoMercadoLivreRequest {
+  string name = 1;
+}
+
+message TreinoMercadoLivreReply {
+  string message = 1;
+}
