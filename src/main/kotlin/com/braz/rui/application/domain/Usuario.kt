@@ -11,10 +11,11 @@ import javax.persistence.*
 data class Usuario(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Integer?,
+    val id: Int?,
     val idExterno: String,
+    @Column(unique = true)
     val login: String,
-    val senha: String,
+    var senha: String,
     val dataCadastro: LocalDateTime = LocalDateTime.now()
 ) {
     constructor(usuarioRequest: NovoUsuarioRequest) :

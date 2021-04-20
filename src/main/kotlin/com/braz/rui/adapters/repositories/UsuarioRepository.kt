@@ -5,5 +5,8 @@ import io.micronaut.data.annotation.Repository
 import io.micronaut.data.jpa.repository.JpaRepository
 
 @Repository
-interface UsuarioRepository: JpaRepository<Usuario, Integer> {
+interface UsuarioRepository: JpaRepository<Usuario, Int> {
+
+    fun findByLogin(login: String): Usuario
+    fun existsByLogin(login: String): Boolean
 }
